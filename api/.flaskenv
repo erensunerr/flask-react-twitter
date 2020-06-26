@@ -1,0 +1,2 @@
+FLASK_APP=fritter
+FLASK_ENV=development
