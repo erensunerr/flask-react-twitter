@@ -5,12 +5,10 @@ from flask import current_app, g
 from flask.cli import with_appcontext
 
 def get_db():
-    """Short summary.
+    """Loads the database into g.
 
-    :return: Description of returned object.
-    :rtype: type
-    :raises ExceptionName: Why the exception is raised.
-
+    :return: g.db
+    :rtype: sqlite3.connect()
     """
     if 'db' not in g:
         g.db = sqlite3.connect(
@@ -21,12 +19,7 @@ def get_db():
     return g.db
 
 def close_db(e=None):
-    """Short summary.
-
-    :param type e: Description of parameter `e`.
-    :return: Description of returned object.
-    :rtype: type
-    :raises ExceptionName: Why the exception is raised.
+    """Offloads the database from g and closes the database.
 
     """
     db = g.pop('db', None)
@@ -35,11 +28,7 @@ def close_db(e=None):
         db.close()
 
 def init_db():
-    """Short summary.
-
-    :return: Description of returned object.
-    :rtype: type
-    :raises ExceptionName: Why the exception is raised.
+    """Creates the database using the provided schema.sql file.
 
     """
     db = get_db()
@@ -51,24 +40,15 @@ def init_db():
 @click.command('init-db')
 @with_appcontext
 def init_db_command():
-    """Short summary.
-
-    :return: Description of returned object.
-    :rtype: type
-    :raises ExceptionName: Why the exception is raised.
-
+    """The command line version of the function init_db, call it with 'init-db'.
     """
     init_db()
     click.echo('Initialized the database.')
 
 def init_app(app):
-    """Short summary.
+    """Makes sure the db gets closed and init-db command works.
 
-    :param type app: Description of parameter `app`.
-    :return: Description of returned object.
-    :rtype: type
-    :raises ExceptionName: Why the exception is raised.
-
+    :param type app: flask.Flask.
     """
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)

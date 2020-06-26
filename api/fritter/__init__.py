@@ -4,12 +4,10 @@ from fritter import db
 from fritter import auth
 
 def create_app():
-    """Short summary.
+    """Application factory.
 
-    :return: Description of returned object.
-    :rtype: type
-    :raises ExceptionName: Why the exception is raised.
-
+    :return: the application.
+    :rtype: flask.Flask
     """
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(

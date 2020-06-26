@@ -7,19 +7,10 @@ Welcome to fritter's documentation!
 ===================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-Fritter API
-===========
-.. automodule:: fritter
-   :members:
-
-.. automodule:: fritter.auth
-  :members:
-
-.. automodule:: fritter.db
-  :members:
+   API
+   API/db
+   API/auth
+   Frontend
 
 
 

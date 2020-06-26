@@ -1,102 +1,160 @@
 import functools
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
+import jwt, datetime
+
 from fritter.db import get_db
+
+def encode_auth_token(user_id):
+    """Generates the auth token. MAKE SURE THE OUTPUT IS NON-NEGATIVE.
+
+    :param user_id: id of the user in database
+    :type user_id: str / int
+    :return: The token
+    :rtype: str
+
+    """
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=10, seconds=0), #expiry date of the token
+            'iat': datetime.datetime.utcnow(), #time token is generated
+            'sub': user_id # subject of the token
+        }
+
+        return jwt.encode(
+            payload,
+            current_app.config.get('SECRET_KEY'),
+            algorithm='HS256'
+        ).hex()
+    except Exception as e:
+        return -1
+
+def decode_auth_token(token):
+    """Decodes the generated auth token. MAKE SURE THE OUTPUT IS NON-NEGATIVE
+
+    :param token: Token
+    :type token: str
+    :return: user_id
+    :rtype: str
+
+    """
+    try:
+        payload = jwt.decode(bytes.fromhex(token), current_app.config.get('SECRET_KEY'))
+        return payload['sub']
+    except jwt.ExpiredSignatureError:
+        return -1
+    except jwt.InvalidTokenError:
+        return -2
+
+
+
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-@bp.route('/register', methods=('POST'))
+@bp.route('/register', methods=['POST'])
 def register():
     """Registers users.
 
-    =====  ==================
-    Error  Meaning
-    =====  ==================
-    0      Success
-    1      Email Missing
-    2      Username Missing
-    3      Password Missing
-    =====  ==================
+    =====   ==================
+    Error   Meaning
+    =====   ==================
+    0       Success
+    1       Email Missing
+    2       Username Missing
+    3       Password Missing
+    =====   ==================
 
-    :return: { 'success': error }
+    :param post username:
+    :param post email:
+    :param post password:
+    :return: { 'status': error }
     :rtype: json / int
     """
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        db = get_db()
-        error = 0
-        if not email:
-            error = 1
-        elif not username:
-            error = 2
-        elif not password:
-            error = 3
-        elif db.execute(
-            'SELECT id FROM user WHERE email = ?', (email, )
-            ).fetchone() is not None:
-            error = 4
+    username = request.form['username']
+    email = request.form['email']
+    password = request.form['password']
+    db = get_db()
+    error = 0
+    if not email:
+        error = 1
+    elif not username:
+        error = 2
+    elif not password:
+        error = 3
+    elif db.execute(
+        'SELECT id FROM user WHERE email = ?', (email, )
+        ).fetchone() is not None:
+        error = 4
 
-        if error == 0:
-            db.execute(
-                'INSERT INTO user (username, password, email) VALUES (?, ?)',
-                (username, generate_password_hash(password), email)
-            )
-            db.commit()
+    if error == 0:
+        db.execute(
+            'INSERT INTO user (username, password, email) VALUES (?, ?, ?)',
+            (username, generate_password_hash(password), email)
+        )
+        db.commit()
 
     return {'status': error}
 
-@bp.route("/login", methods=('GET', 'POST'))
+
+@bp.route("/login", methods=['POST'])
 def login():
-    if request.method == "POST":
-        username = request.form['username']
-        password = request.form['password']
-        db = get_db()
-        error = None
-        user = db.execute(
-            "SELECT * FROM user WHERE username = ?", (username,)
-        ).fetchone()
+    """Logs a given user in.
+    :param post email:
+    :param post password:
 
-        if user is None:
-            error = "Username not found."
-        elif not check_password_hash(user['password'], password):
-            error = "Incorrect password."
+    =====   ===================
+    Error   Meaning
+    =====   ===================
+    0       Success
+    1       Email not found
+    2       Incorrect password
+    =====   ===================
 
-        if error is None:
-            session.clear()
-            session['user_id'] = user['id']
-            return redirect(url_for('index'))
+    :return: Description of returned object.
+    :rtype: type
+    :raises ExceptionName: Why the exception is raised.
+    """
+    email = request.form['email']
+    password = request.form['password']
+    db = get_db()
+    error = 0
+    user = db.execute(
+        "SELECT * FROM user WHERE email = ?", (email,)
+    ).fetchone()
 
-        flash(error)
+    if user is None:
+        error = 1
+    elif not check_password_hash(user['password'], password):
+        error = 2
 
-    return render_template('auth/login.html')
+    if error == 0:
+        return {'status': 0, 'cookie': encode_auth_token(user['id'])}
 
-@bp.before_app_request
-def load_logged_in_user():
-    user_id = session.get('user_id')
+    return {'status': error}
 
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
-
-@bp.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('index'))
 
 def login_required(view):
-    @functools.wraps(view)
+    """Decorator for authorized functions.
+    :param post token: Auth token provided by login
+    :param view: a function.
+    :type view: function
+    :return: modified function
+    :rtype: function
+
+    """
     def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.login'))
+        user_id = decode_auth_token(request.form['token'])
+        if user_id is None:
+            g.user = None
+            return {'status': -1}
+        else:
+            g.user = get_db().execute(
+                'SELECT * FROM user WHERE id = ?', (user_id,)
+            ).fetchone()
         return view(**kwargs)
     return wrapped_view
