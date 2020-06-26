@@ -1,8 +1,36 @@
-import time
+import os
 from flask import Flask
+from fritter import db
+from fritter import auth
 
-app = Flask(__name__)
+def create_app():
+    """Short summary.
 
-@app.route('/time')
-def get_current_time():
-    return {'time': time.time()}
+    :return: Description of returned object.
+    :rtype: type
+    :raises ExceptionName: Why the exception is raised.
+
+    """
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite')
+    )
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    @app.route("/hello")
+    def hello():
+        return "Hello!"
+
+    from fritter import db
+    db.init_app(app)
+
+
+    app.register_blueprint(auth.bp)
+
+    app.add_url_rule('/', endpoint='index')
+
+    return app
