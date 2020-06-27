@@ -57,7 +57,7 @@ def decode_auth_token(token):
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=['POST'])
-def register():
+def register(): # TODO: code the input checks
     """Registers users.
 
     =====   ==================
