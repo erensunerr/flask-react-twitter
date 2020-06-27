@@ -21,7 +21,7 @@ def encode_auth_token(user_id):
     """
     try:
         payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=10, seconds=0), #expiry date of the token
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, minutes=0, seconds=0), #expiry date of the token
             'iat': datetime.datetime.utcnow(), #time token is generated
             'sub': user_id # subject of the token
         }
@@ -87,13 +87,13 @@ def register():
     elif not password:
         error = 3
     elif db.execute(
-        'SELECT id FROM user WHERE email = ?', (email, )
+        'SELECT id FROM users WHERE email = ?', (email, )
         ).fetchone() is not None:
         error = 4
 
     if error == 0:
         db.execute(
-            'INSERT INTO user (username, password, email) VALUES (?, ?, ?)',
+            'INSERT INTO users (username, password, email) VALUES (?, ?, ?)',
             (username, generate_password_hash(password), email)
         )
         db.commit()
@@ -103,7 +103,7 @@ def register():
 
 @bp.route("/login", methods=['POST'])
 def login():
-    """Logs a given user in.
+    """Gives a token given password and email.
     :param post email:
     :param post password:
 
@@ -115,16 +115,14 @@ def login():
     2       Incorrect password
     =====   ===================
 
-    :return: Description of returned object.
-    :rtype: type
-    :raises ExceptionName: Why the exception is raised.
+    :return: {'status': int(error), 'token': user token}
     """
     email = request.form['email']
     password = request.form['password']
     db = get_db()
     error = 0
     user = db.execute(
-        "SELECT * FROM user WHERE email = ?", (email,)
+        "SELECT * FROM users WHERE email = ?", (email,)
     ).fetchone()
 
     if user is None:
@@ -133,7 +131,7 @@ def login():
         error = 2
 
     if error == 0:
-        return {'status': 0, 'cookie': encode_auth_token(user['id'])}
+        return {'status': 0, 'token': encode_auth_token(user['id'])}
 
     return {'status': error}
 
@@ -147,14 +145,15 @@ def login_required(view):
     :rtype: function
 
     """
+    @functools.wraps(view)
     def wrapped_view(**kwargs):
+        token = request.form['token']
         user_id = decode_auth_token(request.form['token'])
-        if user_id is None:
-            g.user = None
+        if user_id < 0:
             return {'status': -1}
         else:
             g.user = get_db().execute(
-                'SELECT * FROM user WHERE id = ?', (user_id,)
+                'SELECT * FROM users WHERE id = ?', (user_id,)
             ).fetchone()
-        return view(**kwargs)
+            return view(**kwargs)
     return wrapped_view
