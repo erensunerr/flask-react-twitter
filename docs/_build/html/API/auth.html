@@ -14,7 +14,7 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Frontend" href="../Frontend.html" />
+    <link rel="next" title="API.base" href="base.html" />
     <link rel="prev" title="API.db" href="db.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -71,9 +71,15 @@
 <dl class="function">
 <dt id="fritter.auth.login">
 <code class="sig-prename descclassname">fritter.auth.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fritter.auth.login" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gives a token given password and email.
-:param post email:
-:param post password:</p>
+<dd><p>Gives a token given password and email.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<em>post</em>) – </p></li>
+<li><p><strong>password</strong> (<em>post</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 21%" />
@@ -106,12 +112,21 @@
 <dl class="function">
 <dt id="fritter.auth.login_required">
 <code class="sig-prename descclassname">fritter.auth.</code><code class="sig-name descname">login_required</code><span class="sig-paren">(</span><em class="sig-param">view</em><span class="sig-paren">)</span><a class="headerlink" href="#fritter.auth.login_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decorator for authorized functions.
-:param post token: Auth token provided by login
-:param view: a function.
-:type view: function
-:return: modified function
-:rtype: function</p>
+<dd><p>Decorator for authorized functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> (<em>post</em>) – Auth token provided by login</p></li>
+<li><p><strong>view</strong> (<em>function</em>) – a function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>modified function</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>function</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -140,6 +155,9 @@
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>Password Missing</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>Pre-existing user</p></td>
 </tr>
 </tbody>
 </table>
@@ -183,6 +201,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../API.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="db.html">API.db</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API.auth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base.html">API.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Frontend.html">Frontend</a></li>
 </ul>
 
@@ -191,7 +210,7 @@
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="db.html" title="previous chapter">API.db</a></li>
-      <li>Next: <a href="../Frontend.html" title="next chapter">Frontend</a></li>
+      <li>Next: <a href="base.html" title="next chapter">API.base</a></li>
   </ul></li>
 </ul>
 </div>

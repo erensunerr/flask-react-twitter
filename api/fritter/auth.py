@@ -67,6 +67,7 @@ def register(): # TODO: code the input checks
     1       Email Missing
     2       Username Missing
     3       Password Missing
+    4       Pre-existing user
     =====   ==================
 
     :param post username:
@@ -104,6 +105,7 @@ def register(): # TODO: code the input checks
 @bp.route("/login", methods=['POST'])
 def login():
     """Gives a token given password and email.
+
     :param post email:
     :param post password:
 
@@ -138,6 +140,7 @@ def login():
 
 def login_required(view):
     """Decorator for authorized functions.
+
     :param post token: Auth token provided by login
     :param view: a function.
     :type view: function
@@ -157,3 +160,4 @@ def login_required(view):
             ).fetchone()
             return view(**kwargs)
     return wrapped_view
+# IDEA: add password recovery

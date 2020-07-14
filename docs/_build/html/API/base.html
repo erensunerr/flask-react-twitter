@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>API.base &#8212; fritter 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Frontend" href="../Frontend.html" />
+    <link rel="prev" title="API.auth" href="auth.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-fritter.base">
+<span id="api-base"></span><h1>API.base<a class="headerlink" href="#module-fritter.base" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="fritter.base.create_post">
+<code class="sig-prename descclassname">fritter.base.</code><code class="sig-name descname">create_post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fritter.base.create_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to create a post.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>body</strong> (<em>post</em>) – supply a body text for this post</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>status (0 good, 1 bad, check docs for login_required)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>{‘status’: (int)}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fritter.base.delete_post">
+<code class="sig-prename descclassname">fritter.base.</code><code class="sig-name descname">delete_post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fritter.base.delete_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to delete a post.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>post</em>) – id of the post</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>status (0 good, 1 bad, check docs for login_required)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>{‘status’: (int)}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fritter.base.get_posts">
+<code class="sig-prename descclassname">fritter.base.</code><code class="sig-name descname">get_posts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fritter.base.get_posts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets posts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>authors</strong> (<em>post</em>) – optionally get posts belonging to multiple authors.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>array of posts</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>JSON array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">fritter</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../API.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">API.db</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auth.html">API.auth</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Frontend.html">Frontend</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="auth.html" title="previous chapter">API.auth</a></li>
+      <li>Next: <a href="../Frontend.html" title="next chapter">Frontend</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Eren Suner.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/API/base.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

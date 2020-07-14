@@ -10,6 +10,7 @@ Welcome to fritter's documentation!
    API
    API/db
    API/auth
+   API/base
    Frontend
 
 
